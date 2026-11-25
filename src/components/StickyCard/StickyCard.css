@@ -1,0 +1,98 @@
+.sticky-card {
+  --dim: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  width: min(1120px, 100%);
+  height: clamp(380px, 56svh, 520px);
+  background: #120e1a;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-l);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -32px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.sticky-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--c-bg);
+  opacity: var(--dim);
+  pointer-events: none;
+}
+
+.sticky-card__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  padding: var(--s-6);
+}
+
+.sticky-card__text .display {
+  margin-top: var(--s-1);
+  font-size: clamp(2rem, 0.9rem + 2vw, 3rem);
+}
+
+/* Two intentional lines on tablet and desktop. */
+@media (min-width: 768px) {
+  .sticky-card__text .display .line {
+    white-space: nowrap;
+  }
+}
+
+.sticky-card__text .body {
+  margin-top: var(--s-1);
+  max-width: 38ch;
+}
+
+.sticky-card__media {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+.sticky-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sticky-card__media::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 30%;
+  background: linear-gradient(90deg, #120e1a, rgba(18, 14, 26, 0));
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .sticky-card__text { padding: var(--s-4); }
+}
+
+@media (max-width: 767px) {
+  .sticky-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    /* Same size for every card; the image absorbs the difference. */
+    height: min(520px, 72svh);
+  }
+  .sticky-card__media {
+    grid-row: 1;
+    min-height: 120px;
+  }
+  .sticky-card__media::before {
+    inset: auto 0 0 0;
+    width: auto;
+    height: 40%;
+    background: linear-gradient(0deg, #120e1a, rgba(18, 14, 26, 0));
+  }
+  .sticky-card__text {
+    padding: var(--s-3);
+    gap: var(--s-1);
+  }
+  .sticky-card__text .body { font-size: 0.9375rem; }
+}

@@ -1,0 +1,20 @@
+.journey {
+  position: relative;
+}
+
+.product-stage {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-stage);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.product-stage.is-active {
+  visibility: visible;
+}
+
+.product-stage__canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

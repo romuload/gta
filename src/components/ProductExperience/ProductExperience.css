@@ -1,0 +1,212 @@
+.experience {
+  position: relative;
+  height: var(--track, 480svh);
+  background:
+    linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-2) 55%, var(--c-bg-2) 100%);
+}
+
+.experience__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Opening headline sits BEHIND the case (the WebGL stage is z 4). */
+.experience__intro {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--s-3);
+  padding-inline: var(--gutter);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+.experience__headline {
+  font-size: clamp(4rem, 1rem + 13vw, 15rem);
+  line-height: 0.86;
+  background: linear-gradient(180deg, #ffffff 0%, #c5c1cc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.experience__intro .lead {
+  max-width: 48ch;
+  margin-top: var(--s-2);
+}
+
+/* Drag surface over the centred model. Vertical page scroll stays native. */
+.experience__drag {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: var(--z-content);
+  width: min(40vw, 560px);
+  height: 68svh;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: pan-y;
+  border-radius: var(--r-l);
+  pointer-events: none;
+}
+
+.experience__drag.is-dragging {
+  cursor: grabbing;
+}
+
+.experience__drag:focus-visible {
+  outline-offset: -2px;
+}
+
+.experience__blocks {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-content);
+  pointer-events: none;
+}
+
+.experience__block {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  gap: var(--s-2);
+  width: min(360px, 26vw);
+  margin-top: -120px;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+.experience__block--left {
+  left: var(--gutter);
+}
+
+.experience__block--right {
+  right: var(--gutter);
+}
+
+.experience__block .display {
+  margin-top: var(--s-1);
+}
+
+.experience__hint {
+  position: absolute;
+  left: 50%;
+  bottom: var(--s-5);
+  z-index: var(--z-content);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin-left: -80px;
+  width: 160px;
+  justify-content: center;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.experience__hint-icon {
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+}
+
+.experience__hint-icon::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .experience__block {
+    width: min(300px, 30vw);
+  }
+  .experience__block .display {
+    font-size: clamp(2rem, 1rem + 2vw, 2.75rem);
+  }
+}
+
+@media (max-width: 767px), (max-width: 1023px) and (orientation: portrait) {
+  .experience__intro {
+    align-content: start;
+    padding-top: 18svh;
+  }
+  .experience__intro .lead {
+    display: none;
+  }
+  .experience__drag {
+    width: 82vw;
+    height: 44svh;
+    top: 40%;
+  }
+  .experience__block {
+    top: auto;
+    bottom: var(--s-10);
+    left: var(--gutter);
+    right: var(--gutter);
+    width: auto;
+    margin-top: 0;
+    gap: var(--s-1);
+  }
+  .experience__block .display {
+    font-size: 2rem;
+  }
+  .experience__block .body {
+    font-size: 0.9375rem;
+  }
+  .experience__hint {
+    bottom: var(--s-3);
+  }
+}
+
+/* Reduced motion: conventional, readable flow. */
+.experience--static {
+  height: auto;
+  padding-block: var(--s-16);
+}
+
+.experience--static .experience__sticky {
+  position: relative;
+  height: auto;
+  overflow: visible;
+  display: grid;
+  gap: var(--s-10);
+}
+
+.experience--static .experience__intro,
+.experience--static .experience__block {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  margin: 0;
+  width: auto;
+  max-width: 420px;
+}
+
+.experience--static .experience__intro {
+  max-width: none;
+}
+
+.experience--static .experience__blocks {
+  position: relative;
+  display: grid;
+  gap: var(--s-8);
+}
+
+.experience--static .experience__block--right {
+  justify-self: end;
+}
