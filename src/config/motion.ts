@@ -35,19 +35,21 @@ export const motion = {
     /** Copy stays fully visible until `textHoldEnd`, gone by `textFadeEnd`. */
     textHoldEnd: 0.06,
     textFadeEnd: 0.24,
-    /** Last stretch fades the frame into the next section. */
-    exitFadeStart: 0.9,
-    /** Smoothing for currentTime chase (0–1, per frame). */
-    scrubLerp: 0.22,
+    /** Last stretch dims the frame (never to full black) as Section 02 rises over it. */
+    exitFadeStart: 0.86,
+    exitFadeMax: 0.55,
+    /** Smoothing for the frame chase (0–1, per frame). */
+    scrubLerp: 0.25,
+    /** Hero image sequence (extracted from the 8s, 24fps clip). */
+    sequence: { frames: 193, fps: 24, coarseEvery: 8 },
   },
 
   world: {
     scrollLength: 440,
     scrollLengthMobile: 360,
     // Progress windows on the section's own 0–1 track
-    /** Background frame fades up from the hero's black exit. */
-    bgIn: [0, 0.08],
-    introIn: [0.02, 0.1],
+    /** Title fades in while the section rises into view (entry progress). */
+    introIn: [0.35, 1],
     /** Section title steps back as the first card arrives. */
     introOut: [0.13, 0.24],
     cardIn: [
@@ -56,8 +58,9 @@ export const motion = {
       [0.56, 0.74],
     ],
     exit: [0.86, 0.98],
-    /** Background fades to the page colour, handing over to Section 03. */
-    bgOut: [0.9, 1],
+    /** Background dims (never to black) as Section 03 rises over it. */
+    bgOut: [0.88, 1],
+    bgOutMax: 0.7,
     /** Slow push-in on the locked background across the whole track. */
     bgScale: [1.08, 1],
     depth: {
@@ -83,8 +86,8 @@ export const motion = {
       [0.37, 0.53],
       [0.57, 0.73],
     ],
-    /** Opening headline: in during the entrance, out before block 01. */
-    intro: { in: [0.02, 0.1], out: [0.14, 0.19] },
+    /** Opening headline: in while the section rises (entry progress), out before block 01. */
+    intro: { in: [0.3, 1], out: [0.14, 0.19] },
     /** Each block fades in over the first 25% of its window and out over the last 25%. */
     blockFade: 0.25,
     /** Hinge opening (radians). Stops before the lid hits the spine. */

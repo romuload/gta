@@ -5,41 +5,40 @@ import { gsap } from '../../lib/gsap'
 import { range, piecewise, easeIn } from '../../lib/math'
 import { scrollToSection } from '../../lib/scroll'
 import { useScrollProgress } from '../../hooks/useScrollProgress'
-import { useVideoScrubbing } from '../../hooks/useVideoScrubbing'
 import { useIsMobile } from '../../hooks/useMediaQuery'
-import { ScrollVideo } from '../ScrollVideo/ScrollVideo'
+import { ScrollSequence, type ScrollSequenceHandle } from '../ScrollSequence/ScrollSequence'
+import type { FrameSequence } from '../../lib/frameSequence'
 import './HeroSection.css'
 
 interface Props {
-  videoSrc: string | null
+  seq: FrameSequence | null
   ready: boolean
   reducedMotion: boolean
 }
 
-export function HeroSection({ videoSrc, ready, reducedMotion }: Props) {
+export function HeroSection({ seq, ready, reducedMotion }: Props) {
   const c = content.hero
   const m = motion.hero
   const isMobile = useIsMobile()
   const trackRef = useRef<HTMLElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const seqRef = useRef<ScrollSequenceHandle>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const exitRef = useRef<HTMLDivElement>(null)
   const introRef = useRef<HTMLDivElement>(null)
 
   const scrubbing = !reducedMotion
-  const { setTime } = useVideoScrubbing(videoRef, scrubbing && !!videoSrc, m.scrubLerp)
 
   useScrollProgress(
     trackRef,
     (p) => {
-      setTime(piecewise(p, m.timeline))
+      seqRef.current?.setFrame(piecewise(p, m.timeline) * m.sequence.fps)
       const fade = range(p, [m.textHoldEnd, m.textFadeEnd])
       if (contentRef.current) {
         contentRef.current.style.opacity = String(1 - fade)
         contentRef.current.style.transform = `translate3d(0, ${-fade * 48}px, 0)`
         contentRef.current.style.visibility = fade >= 1 ? 'hidden' : 'visible'
       }
-      if (exitRef.current) exitRef.current.style.opacity = String(easeIn(range(p, [m.exitFadeStart, 1])))
+      if (exitRef.current) exitRef.current.style.opacity = String(easeIn(range(p, [m.exitFadeStart, 1])) * m.exitFadeMax)
     },
     scrubbing,
   )
@@ -74,7 +73,14 @@ export function HeroSection({ videoSrc, ready, reducedMotion }: Props) {
         {reducedMotion ? (
           <img className="hero__still" src={ASSETS.heroStill} alt={c.stillAlt} />
         ) : (
-          <ScrollVideo ref={videoRef} src={videoSrc} poster={ASSETS.heroPoster} label={c.videoLabel} className="hero__video" />
+          <ScrollSequence
+            ref={seqRef}
+            seq={seq}
+            poster={ASSETS.heroPoster}
+            label={c.videoLabel}
+            lerp={m.scrubLerp}
+            className="hero__video"
+          />
         )}
         <div className="hero__shade" aria-hidden="true" />
         <div className="hero__exit" ref={exitRef} aria-hidden="true" />

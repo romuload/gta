@@ -43,9 +43,9 @@ export function ProductExperience({ reducedMotion }: Props) {
 
   useScrollProgress(
     trackRef,
-    (p) => {
+    (p, entry) => {
       productStore.p = p
-      const inT = easeOut(range(p, M.intro.in as [number, number]))
+      const inT = easeOut(range(entry, M.intro.in as [number, number]))
       const outT = range(p, M.intro.out as [number, number])
       apply(introRef.current, { opacity: inT * (1 - outT), y: (1 - inT) * 40 - outT * 40 })
       M.blocks.forEach((w, i) => apply(blockRefs.current[i], envelope(p, w as [number, number], M.blockFade)))

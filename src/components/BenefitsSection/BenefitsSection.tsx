@@ -37,18 +37,16 @@ export function BenefitsSection({ reducedMotion }: Props) {
 
   useScrollProgress(
     trackRef,
-    (p) => {
+    (p, entry) => {
       const vh = window.innerHeight
       const bg = bgRef.current
-      if (bg) {
-        bg.style.opacity = easeOut(range(p, W.bgIn as [number, number])).toFixed(3)
-        bg.style.transform = `scale(${lerp(W.bgScale[0], W.bgScale[1], p).toFixed(4)})`
-      }
-      if (fadeRef.current) fadeRef.current.style.opacity = easeIn(range(p, W.bgOut as [number, number])).toFixed(3)
+      if (bg) bg.style.transform = `scale(${lerp(W.bgScale[0], W.bgScale[1], p).toFixed(4)})`
+      if (fadeRef.current)
+        fadeRef.current.style.opacity = (easeIn(range(p, W.bgOut as [number, number])) * W.bgOutMax).toFixed(3)
 
       const intro = introRef.current
       if (intro) {
-        const i = easeOut(range(p, W.introIn as [number, number]))
+        const i = easeOut(range(entry, W.introIn as [number, number]))
         const o = easeInOut(range(p, W.introOut as [number, number]))
         intro.style.opacity = (i * (1 - o)).toFixed(3)
         intro.style.transform = `translate3d(0, ${((1 - i) * 32 - o * 64).toFixed(1)}px, 0) scale(${(1 - o * 0.04).toFixed(4)})`

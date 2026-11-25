@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { ASSETS } from './config/content'
 import { useReducedMotion } from './hooks/useReducedMotion'
-import { useHeroAssets } from './hooks/useHeroAssets'
+import { useHeroSequence } from './hooks/useHeroSequence'
 import { ScrollTrigger } from './lib/gsap'
 import { LoadingScreen } from './components/LoadingScreen/LoadingScreen'
 import { Header } from './components/Header/Header'
@@ -14,8 +14,8 @@ import { Footer } from './components/Footer/Footer'
 
 export default function App() {
   const reducedMotion = useReducedMotion()
-  // The scroll video is only needed when motion is allowed.
-  const hero = useHeroAssets(ASSETS.heroVideo, !reducedMotion)
+  // The scroll sequence is only needed when motion is allowed.
+  const hero = useHeroSequence(!reducedMotion)
 
   // Any layout height change (breakpoints, fonts, lazy images) re-measures every track.
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function App() {
       <LoadingScreen progress={hero.progress} done={hero.ready} />
       <Header />
       <main id="main">
-        <HeroSection videoSrc={hero.src} ready={hero.ready} reducedMotion={reducedMotion} />
+        <HeroSection seq={hero.seq} ready={hero.ready} reducedMotion={reducedMotion} />
         <BenefitsSection reducedMotion={reducedMotion} />
         <ProductJourney reducedMotion={reducedMotion}>
           <ProductExperience reducedMotion={reducedMotion} />

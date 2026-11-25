@@ -17,7 +17,6 @@ export const ASSETS = {
   xbox: asset('assets/logos/xbox-series.svg'),
   rockstar: asset('assets/logos/rockstar.svg'),
   esrb: asset('assets/logos/esrb-m.svg'),
-  heroVideo: asset('assets/videos/hero-scrub.mp4'),
   heroPoster: asset('assets/images/hero-poster.jpg'),
   heroStill: asset('assets/images/hero-still.jpg'),
   card1: asset('assets/images/card1.jpg'),
