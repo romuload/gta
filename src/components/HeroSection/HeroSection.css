@@ -155,7 +155,7 @@
     object-position: 64% 50%;
   }
   .hero__video {
-    transform: translate3d(0, calc(var(--hero-fade, 0) * 19svh), 0);
+    transform: translate3d(0, calc(var(--hero-glide, 0) * 19svh), 0);
     will-change: transform;
   }
   .hero__video::before {
@@ -165,7 +165,7 @@
     height: 30%;
     z-index: 1;
     background: linear-gradient(180deg, var(--c-bg) 0%, rgba(9, 9, 13, 0) 100%);
-    opacity: var(--hero-fade, 0);
+    opacity: var(--hero-glide, 0);
     pointer-events: none;
   }
   .hero__video::after {
@@ -182,7 +182,7 @@
       linear-gradient(180deg, rgba(9, 9, 13, 0.55) 0%, rgba(9, 9, 13, 0) 14%),
       linear-gradient(0deg, var(--c-bg) 0%, var(--c-bg) 34%, rgba(9, 9, 13, 0) 52%);
     /* Only there for the copy: it leaves with it. */
-    opacity: calc(1 - var(--hero-fade, 0));
+    opacity: calc(1 - var(--hero-glide, 0));
   }
   .hero__content { padding-bottom: var(--s-4); }
   .hero__side { gap: var(--s-3); margin-top: var(--s-3); }

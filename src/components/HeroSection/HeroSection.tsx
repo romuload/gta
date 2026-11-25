@@ -33,8 +33,9 @@ export function HeroSection({ seq, ready, reducedMotion }: Props) {
     (p) => {
       seqRef.current?.setFrame(piecewise(p, m.timeline) * m.sequence.fps)
       const fade = range(p, [m.textHoldEnd, m.textFadeEnd])
-      // Phones: once the copy is gone, the image band glides to the centre.
-      trackRef.current?.style.setProperty('--hero-fade', fade.toFixed(3))
+      // Phones: the image band only glides to the centre once the copy is
+      // mostly gone, so text never sits on the moving picture.
+      trackRef.current?.style.setProperty('--hero-glide', range(fade, [0.55, 1]).toFixed(3))
       if (contentRef.current) {
         contentRef.current.style.opacity = String(1 - fade)
         contentRef.current.style.transform = `translate3d(0, ${-fade * 48}px, 0)`
