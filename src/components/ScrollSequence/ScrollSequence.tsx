@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import type { FrameSequence } from '../../lib/frameSequence'
-import { useIsMobile } from '../../hooks/useMediaQuery'
 import './ScrollSequence.css'
 
 export interface ScrollSequenceHandle {
@@ -12,8 +11,8 @@ interface Props {
   seq: FrameSequence | null
   poster: string
   label: string
-  /** Horizontal focus for the cover crop, 0–1 (keeps the character in frame). */
-  focusX?: number
+  /** Subject position (fraction of frame width) for a source frame index. The crop centres on it. */
+  focus?: (frameIndex: number) => number
   lerp?: number
   className?: string
 }
@@ -24,15 +23,15 @@ interface Props {
  * hero is off screen.
  */
 export const ScrollSequence = forwardRef<ScrollSequenceHandle, Props>(function ScrollSequence(
-  { seq, poster, label, focusX = 0.6, lerp = 0.25, className = '' },
+  { seq, poster, label, focus = () => 0.5, lerp = 0.25, className = '' },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const target = useRef(0)
   const current = useRef(0)
   const drawn = useRef({ index: -1, w: 0, h: 0 })
-  const isMobile = useIsMobile()
-  const fx = isMobile ? Math.min(1, focusX + 0.04) : focusX
+  const focusRef = useRef(focus)
+  focusRef.current = focus
 
   useImperativeHandle(ref, () => ({ setFrame: (f) => (target.current = f) }), [])
 
@@ -45,8 +44,8 @@ export const ScrollSequence = forwardRef<ScrollSequenceHandle, Props>(function S
     let dirty = true
 
     const resize = () => {
-      // The source is 992px wide: more than ~1.5× DPR adds cost, not detail.
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+      // The source is 992px wide: beyond 2× DPR adds cost, not detail.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const w = Math.round(canvas.clientWidth * dpr)
       const h = Math.round(canvas.clientHeight * dpr)
       if (w !== canvas.width || h !== canvas.height) {
@@ -67,7 +66,9 @@ export const ScrollSequence = forwardRef<ScrollSequenceHandle, Props>(function S
       const dw = iw * s
       const dh = ih * s
       ctx.imageSmoothingQuality = 'high'
-      ctx.drawImage(hit.frame, (cw - dw) * fx, (ch - dh) / 2, dw, dh)
+      // Centre the crop on the subject, never revealing past the frame edges.
+      const x = Math.min(0, Math.max(cw - dw, cw / 2 - focusRef.current(hit.index) * dw))
+      ctx.drawImage(hit.frame, x, (ch - dh) / 2, dw, dh)
       drawn.current = { index: hit.index, w: cw, h: ch }
       dirty = false
       canvas.dataset.frame = String(hit.index)
@@ -101,10 +102,13 @@ export const ScrollSequence = forwardRef<ScrollSequenceHandle, Props>(function S
       io.disconnect()
       off()
     }
-  }, [seq, fx, lerp])
+  }, [seq, lerp])
 
   return (
-    <div className={`scroll-sequence ${className}`} style={{ backgroundImage: `url(${poster})`, backgroundPosition: `${fx * 100}% 50%` }}>
+    <div
+      className={`scroll-sequence ${className}`}
+      style={{ backgroundImage: `url(${poster})`, backgroundPosition: `${focus(0) * 100}% 50%` }}
+    >
       <canvas ref={canvasRef} role="img" aria-label={label} />
     </div>
   )

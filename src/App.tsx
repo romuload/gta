@@ -51,6 +51,8 @@ export default function App() {
 
   useEffect(() => {
     if (!hero.ready) return
+    // iOS lets the page scroll under the loader; the story starts at the top.
+    if (!location.hash) window.scrollTo(0, 0)
     const id = requestAnimationFrame(() => ScrollTrigger.refresh())
     return () => cancelAnimationFrame(id)
   }, [hero.ready])

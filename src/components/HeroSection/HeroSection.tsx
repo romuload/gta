@@ -33,6 +33,8 @@ export function HeroSection({ seq, ready, reducedMotion }: Props) {
     (p) => {
       seqRef.current?.setFrame(piecewise(p, m.timeline) * m.sequence.fps)
       const fade = range(p, [m.textHoldEnd, m.textFadeEnd])
+      // Phones: once the copy is gone, the image band glides to the centre.
+      trackRef.current?.style.setProperty('--hero-fade', fade.toFixed(3))
       if (contentRef.current) {
         contentRef.current.style.opacity = String(1 - fade)
         contentRef.current.style.transform = `translate3d(0, ${-fade * 48}px, 0)`
@@ -79,6 +81,7 @@ export function HeroSection({ seq, ready, reducedMotion }: Props) {
             poster={ASSETS.heroPoster}
             label={c.videoLabel}
             lerp={m.scrubLerp}
+            focus={(f) => piecewise(f, m.focus)}
             className="hero__video"
           />
         )}

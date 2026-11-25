@@ -42,6 +42,12 @@ export const motion = {
     scrubLerp: 0.25,
     /** Hero image sequence (extracted from the 8s, 24fps clip). */
     sequence: { frames: 193, fps: 24, coarseEvery: 8 },
+    /**
+     * Where the action is in each part of the clip (source frame → fraction of
+     * the frame width). Narrow screens centre their crop here, so the
+     * character, then the car, stay in shot.
+     */
+    focus: [[0, 0.64], [31, 0.6], [48, 0.56], [72, 0.62], [96, 0.68], [130, 0.62], [150, 0.55], [170, 0.5], [192, 0.47]] as [number, number][],
   },
 
   world: {

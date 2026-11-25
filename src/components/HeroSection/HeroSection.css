@@ -141,15 +141,48 @@
   .hero__content { padding-bottom: var(--s-6); }
 }
 
+/*
+ * Phones: the 2.3:1 clip filling a portrait screen would be a ~2× blurry
+ * close-up of a fraction of the frame. Instead it gets a cinematic band at
+ * the top (less upscaling, more of the shot) that melts into the page, with
+ * the copy below it.
+ */
 @media (max-width: 767px) {
   .hero__video,
   .hero__still {
-    object-position: 62% 50%;
+    inset: 0 0 auto 0;
+    height: 62svh;
+    object-position: 64% 50%;
+  }
+  .hero__video {
+    transform: translate3d(0, calc(var(--hero-fade, 0) * 19svh), 0);
+    will-change: transform;
+  }
+  .hero__video::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 30%;
+    z-index: 1;
+    background: linear-gradient(180deg, var(--c-bg) 0%, rgba(9, 9, 13, 0) 100%);
+    opacity: var(--hero-fade, 0);
+    pointer-events: none;
+  }
+  .hero__video::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 42%;
+    z-index: 1;
+    background: linear-gradient(0deg, var(--c-bg) 0%, rgba(9, 9, 13, 0.7) 40%, rgba(9, 9, 13, 0) 100%);
+    pointer-events: none;
   }
   .hero__shade {
     background:
-      linear-gradient(180deg, rgba(9, 9, 13, 0.5) 0%, rgba(9, 9, 13, 0) 16%),
-      linear-gradient(0deg, rgba(9, 9, 13, 0.92) 0%, rgba(9, 9, 13, 0.6) 34%, rgba(9, 9, 13, 0) 60%);
+      linear-gradient(180deg, rgba(9, 9, 13, 0.55) 0%, rgba(9, 9, 13, 0) 14%),
+      linear-gradient(0deg, var(--c-bg) 0%, var(--c-bg) 34%, rgba(9, 9, 13, 0) 52%);
+    /* Only there for the copy: it leaves with it. */
+    opacity: calc(1 - var(--hero-fade, 0));
   }
   .hero__content { padding-bottom: var(--s-4); }
   .hero__side { gap: var(--s-3); margin-top: var(--s-3); }
